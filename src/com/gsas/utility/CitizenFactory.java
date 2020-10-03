@@ -5,12 +5,12 @@ import com.gsas.service.CitizenServiceImpl;
 
 public class CitizenFactory {
 
-	public static Object getInstance(String type) {
+	public static Object getInstance(LayerType type) {
 		
-		if(type.equals("dao"))
-			return new CitizenDaoImpl();
-		else if(type.equals("service"))
-			return new CitizenServiceImpl();
+		switch(type) {
+		case DAO : return new CitizenDaoImpl();
+		case SERVICE : return new CitizenServiceImpl();
+		}
 		return null;
 	}
 

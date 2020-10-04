@@ -13,13 +13,15 @@ public class CitizenServiceImpl implements CitizenService {
 	
 	
 	public CitizenServiceImpl() {
-		citizenDao = (CitizenDao) CitizenFactory.getInstance("dao");
+		citizenDao = (CitizenDao) CitizenFactory.getInstance(LayerType.DAO);
 	}
 
 	@Override
-	public void storeCitizenService(CitizenDetailsVO citizen) {
-		dao.storeCitizen(citizen);
-	}	@Override
+	public void registerCitizen(CitizenDetailsVO citizenDetailsVO) {
+		citizenDao.registerCitizen(citizenDetailsVO);
+	}
+	
+	@Override
 	public CitizenVO Authenticate(String userName, String password) throws AuthenticationException {
 		CitizenVO citizenVO = citizenDao.Authenticate(userName, password);
 		if(citizenVO == null) {

@@ -14,6 +14,7 @@ import com.gsas.exception.AuthenticationException;
 import com.gsas.model.CitizenVO;
 import com.gsas.service.CitizenService;
 import com.gsas.utility.CitizenFactory;
+import com.gsas.utility.LayerType;
 
 /**
  * Servlet implementation class LoginServlet
@@ -27,7 +28,7 @@ public class LoginServlet extends HttpServlet {
     }
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		CitizenService citizenService = (CitizenService) CitizenFactory.getInstance("service");
+		CitizenService citizenService = (CitizenService) CitizenFactory.getInstance(LayerType.SERVICE);
 		RequestDispatcher rd = null;
 		try {
 			CitizenVO citizenVO = citizenService.Authenticate(request.getParameter("username"), request.getParameter("password"));

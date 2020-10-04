@@ -15,6 +15,7 @@ import com.gsas.model.CitizenDetailsVO;
 import com.gsas.model.CitizenVO;
 import com.gsas.service.CitizenService;
 import com.gsas.utility.CitizenFactory;
+import com.gsas.utility.LayerType;
 
 /**
  * Servlet implementation class EditCitizenDetailsServlet
@@ -30,7 +31,7 @@ public class EditCitizenDetailsServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		CitizenService citizenService = (CitizenService) CitizenFactory.getInstance("service");
+		CitizenService citizenService = (CitizenService) CitizenFactory.getInstance(LayerType.SERVICE);
 		RequestDispatcher requestDispatcher = null;
 		HttpSession session = request.getSession();
 		CitizenVO citizenVO = (CitizenVO) session.getAttribute("citizenVO");

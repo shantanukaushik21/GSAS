@@ -1,5 +1,7 @@
 package com.gsas.dao;
 
-public interface CitizenDao {
+import com.gsas.model.CitizenDetailsVO;
 
+public interface CitizenDao {
+	public void storeCitizen(CitizenDetailsVO citizen);
 }

@@ -1,5 +1,7 @@
 package com.gsas.service;
 
-public interface CitizenService {
+import com.gsas.model.CitizenDetailsVO;
 
+public interface CitizenService {
+	public void storeCitizenService(CitizenDetailsVO citizen);
 }

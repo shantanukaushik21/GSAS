@@ -23,3 +23,4 @@ local.properties
 .factorypath
 .springBeans
 .sts4-cache
+*.class

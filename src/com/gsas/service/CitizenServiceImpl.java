@@ -6,6 +6,7 @@ import com.gsas.exception.CitizenNotFoundException;
 import com.gsas.model.CitizenDetailsVO;
 import com.gsas.model.CitizenVO;
 import com.gsas.utility.CitizenFactory;
+import com.gsas.utility.LayerType;
 
 public class CitizenServiceImpl implements CitizenService {
 	private CitizenDao citizenDao = null;
@@ -16,6 +17,9 @@ public class CitizenServiceImpl implements CitizenService {
 	}
 
 	@Override
+	public void storeCitizenService(CitizenDetailsVO citizen) {
+		dao.storeCitizen(citizen);
+	}	@Override
 	public CitizenVO Authenticate(String userName, String password) throws AuthenticationException {
 		CitizenVO citizenVO = citizenDao.Authenticate(userName, password);
 		if(citizenVO == null) {

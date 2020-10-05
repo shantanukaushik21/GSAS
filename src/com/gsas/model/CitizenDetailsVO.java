@@ -13,19 +13,19 @@ public class CitizenDetailsVO {
 	private String email;
 	private long phone;
 	private AddressVO addressVO;
-	private String income;
+	private String incomeGroup;
 	private String profession;
 	private long adharNumber;
 	private String pancardNumber;
-	private CitizenVO citizenVO;
+	private LoginVO loginVO;
 	
 	public CitizenDetailsVO() {
 		super();
 	}
 
 	public CitizenDetailsVO(long citizenDetailsId, String firstName, String middleName, String lastName,
-			LocalDate dateOfBirth, String gender, String email, long phone, AddressVO addressVO, String income,
-			String profession, long adharNumber, String pancardNumber, CitizenVO citizenVO) {
+			LocalDate dateOfBirth, String gender, String email, long phone, AddressVO addressVO, String incomeGroup,
+			String profession, long adharNumber, String pancardNumber, LoginVO loginVO) {
 		super();
 		this.citizenDetailsId = citizenDetailsId;
 		this.firstName = firstName;
@@ -36,11 +36,11 @@ public class CitizenDetailsVO {
 		this.email = email;
 		this.phone = phone;
 		this.addressVO = addressVO;
-		this.income = income;
+		this.incomeGroup = incomeGroup;
 		this.profession = profession;
 		this.adharNumber = adharNumber;
 		this.pancardNumber = pancardNumber;
-		this.citizenVO = citizenVO;
+		this.loginVO = loginVO;
 	}
 
 	public long getCitizenDetailsId() {
@@ -115,12 +115,12 @@ public class CitizenDetailsVO {
 		this.addressVO = addressVO;
 	}
 
-	public String getIncome() {
-		return income;
+	public String getIncomeGroup() {
+		return incomeGroup;
 	}
 
-	public void setIncome(String income) {
-		this.income = income;
+	public void setIncomeGroup(String incomeGroup) {
+		this.incomeGroup = incomeGroup;
 	}
 
 	public String getProfession() {
@@ -147,21 +147,23 @@ public class CitizenDetailsVO {
 		this.pancardNumber = pancardNumber;
 	}
 
-	public CitizenVO getCitizenVO() {
-		return citizenVO;
+	public LoginVO getCitizenVO() {
+		return loginVO;
 	}
 
-	public void setCitizenVO(CitizenVO citizenVO) {
-		this.citizenVO = citizenVO;
+	public void setCitizenVO(LoginVO loginVO) {
+		this.loginVO = loginVO;
 	}
 
 	@Override
 	public String toString() {
 		return "CitizenDetailsVO [citizenDetailsId=" + citizenDetailsId + ", firstName=" + firstName + ", middleName="
 				+ middleName + ", LastName=" + LastName + ", dateOfBirth=" + dateOfBirth + ", gender=" + gender
-				+ ", email=" + email + ", phone=" + phone + ", addressVO=" + addressVO + ", income=" + income
+				+ ", email=" + email + ", phone=" + phone + ", addressVO=" + addressVO + ", incomeGroup=" + incomeGroup
 				+ ", profession=" + profession + ", adharNumber=" + adharNumber + ", pancardNumber=" + pancardNumber
-				+ ", citizenVO=" + citizenVO + "]";
+				+ ", loginVO=" + loginVO + "]";
 	}
+
+
 	
 }

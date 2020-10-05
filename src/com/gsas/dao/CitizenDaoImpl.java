@@ -31,7 +31,7 @@ public class CitizenDaoImpl implements CitizenDao {
 				System.out.println("Error in sequence number");
 			}
 			//citizen_credential
-			PreparedStatement preparedStatement = connection.prepareStatement("insert into citizen_credential values(?,?,?,?)");
+			PreparedStatement preparedStatement = connection.prepareStatement("insert into login_credential values(?,?,?,?)");
 			preparedStatement.setLong(1, seq);
 			preparedStatement.setString(2, citizenDetailsVO.getCitizenVO().getUserName());
 			preparedStatement.setString(3, citizenDetailsVO.getCitizenVO().getPassword());
@@ -108,7 +108,7 @@ public class CitizenDaoImpl implements CitizenDao {
 		try {
 						
 			connection = DBUtility.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement("select * from citizen_details d inner join citizen_credential c "
+			PreparedStatement preparedStatement = connection.prepareStatement("select * from citizen_details d inner join login_credential c "
 					+ "on d.citizen_ref = c.citizen_id inner join citizen_address a"
 					+ " on a.address_id = d.address_ref where citizen_ref=?");
 
@@ -164,7 +164,7 @@ public class CitizenDaoImpl implements CitizenDao {
 			connection = DBUtility.getConnection();
 			
 			//Update citizen_credential
-			PreparedStatement updateStatement = connection.prepareStatement("update citizen_credential set username=?,password=? where citizen_id=?");
+			PreparedStatement updateStatement = connection.prepareStatement("update login_credential set username=?,password=? where citizen_id=?");
 			updateStatement.setString(1, citizenDetailsVO.getCitizenVO().getUserName());
 			updateStatement.setString(2, citizenDetailsVO.getCitizenVO().getPassword());
 			updateStatement.setLong(3, citizenDetailsVO.getCitizenVO().getCitizenId());

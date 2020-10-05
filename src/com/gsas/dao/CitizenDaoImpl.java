@@ -10,7 +10,7 @@ import com.gsas.exception.AuthenticationException;
 import com.gsas.exception.CitizenNotFoundException;
 import com.gsas.model.AddressVO;
 import com.gsas.model.CitizenDetailsVO;
-import com.gsas.model.CitizenVO;
+import com.gsas.model.LoginVO;
 import com.gsas.utility.DBUtility;
 
 public class CitizenDaoImpl implements CitizenDao {
@@ -31,10 +31,11 @@ public class CitizenDaoImpl implements CitizenDao {
 				System.out.println("Error in sequence number");
 			}
 			//citizen_credential
-			PreparedStatement preparedStatement = connection.prepareStatement("insert into citizen_credential values(?,?,?)");
+			PreparedStatement preparedStatement = connection.prepareStatement("insert into citizen_credential values(?,?,?,?)");
 			preparedStatement.setLong(1, seq);
 			preparedStatement.setString(2, citizenDetailsVO.getCitizenVO().getUserName());
 			preparedStatement.setString(3, citizenDetailsVO.getCitizenVO().getPassword());
+			preparedStatement.setBoolean(4, false);
 			preparedStatement.executeUpdate();
 			
 			//citizen_address
@@ -72,32 +73,33 @@ public class CitizenDaoImpl implements CitizenDao {
 		}
 }
 	@Override
-	public CitizenVO Authenticate(String userName, String password) throws AuthenticationException {
-		CitizenVO citizenVO = null;
+	public LoginVO Authenticate(String userName, String password) throws AuthenticationException {
+		LoginVO loginVO = null;
 		try {
 			Connection connection = DBUtility.getConnection();
-			PreparedStatement updateStatement = connection.prepareStatement("select * from citizenVO where username = ? and password = ?");
-			updateStatement.setString(1, userName);
-			updateStatement.setString(2, password);
+			PreparedStatement fetchStatement = connection.prepareStatement("select * from citizenVO where username = ? and password = ? where is_employee=?");
+			fetchStatement.setString(1, userName);
+			fetchStatement.setString(2, password);
+			fetchStatement.setBoolean(3, false);
 			
-			ResultSet resultSet = updateStatement.executeQuery();
+			ResultSet resultSet = fetchStatement.executeQuery();
 			if(resultSet.next()) {
-				citizenVO = new CitizenVO();
-				citizenVO.setCitizenId(resultSet.getLong("citizen_id"));
-				citizenVO.setUserName(resultSet.getString("username"));
-				citizenVO.setPassword(resultSet.getString("password"));
-				return citizenVO;
+				loginVO = new LoginVO();
+				loginVO.setCitizenId(resultSet.getLong("citizen_id"));
+				loginVO.setUserName(resultSet.getString("username"));
+				loginVO.setPassword(resultSet.getString("password"));
+				return loginVO;
 			}
 			resultSet.close();
-			updateStatement.close();
+			fetchStatement.close();
 			connection.close();
-			if(citizenVO == null) {
+			if(loginVO == null) {
 				throw new AuthenticationException("Sorry username or Password is Incorrect");
 			} 
 		} catch(SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		return citizenVO;
+		return loginVO;
 	}
 
 	@Override
@@ -112,10 +114,11 @@ public class CitizenDaoImpl implements CitizenDao {
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()){
-				CitizenVO citizenVO = new CitizenVO();
-				citizenVO.setCitizenId(resultSet.getLong("citizen_id"));
-				citizenVO.setUserName(resultSet.getString("username"));
-				citizenVO.setPassword(resultSet.getString("password"));
+				LoginVO loginVO = new LoginVO();
+				loginVO.setCitizenId(resultSet.getLong("citizen_id"));
+				loginVO.setUserName(resultSet.getString("username"));
+				loginVO.setPassword(resultSet.getString("password"));
+				loginVO.setEmployee(resultSet.getBoolean("is_employee"));
 				
 				AddressVO addressVO = new AddressVO();
 				addressVO.setStreet(resultSet.getString("street"));
@@ -138,7 +141,7 @@ public class CitizenDaoImpl implements CitizenDao {
 				citizenDetailsVO.setProfession(resultSet.getString("profession"));
 				citizenDetailsVO.setAdharNumber(resultSet.getLong("adhar_number"));
 				citizenDetailsVO.setPancardNumber(resultSet.getString("pancard_number"));
-				citizenDetailsVO.setCitizenVO(citizenVO);
+				citizenDetailsVO.setCitizenVO(loginVO);
 				
 			}
 

@@ -17,7 +17,7 @@ public class CitizenDetailsVO {
 	private String profession;
 	private long adharNumber;
 	private String pancardNumber;
-	private CitizenVO citizenVO;
+	private LoginVO loginVO;
 	
 	public CitizenDetailsVO() {
 		super();
@@ -25,7 +25,7 @@ public class CitizenDetailsVO {
 
 	public CitizenDetailsVO(long citizenDetailsId, String firstName, String middleName, String lastName,
 			LocalDate dateOfBirth, String gender, String email, long phone, AddressVO addressVO, String incomeGroup,
-			String profession, long adharNumber, String pancardNumber, CitizenVO citizenVO) {
+			String profession, long adharNumber, String pancardNumber, LoginVO loginVO) {
 		super();
 		this.citizenDetailsId = citizenDetailsId;
 		this.firstName = firstName;
@@ -40,7 +40,7 @@ public class CitizenDetailsVO {
 		this.profession = profession;
 		this.adharNumber = adharNumber;
 		this.pancardNumber = pancardNumber;
-		this.citizenVO = citizenVO;
+		this.loginVO = loginVO;
 	}
 
 	public long getCitizenDetailsId() {
@@ -147,12 +147,12 @@ public class CitizenDetailsVO {
 		this.pancardNumber = pancardNumber;
 	}
 
-	public CitizenVO getCitizenVO() {
-		return citizenVO;
+	public LoginVO getCitizenVO() {
+		return loginVO;
 	}
 
-	public void setCitizenVO(CitizenVO citizenVO) {
-		this.citizenVO = citizenVO;
+	public void setCitizenVO(LoginVO loginVO) {
+		this.loginVO = loginVO;
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class CitizenDetailsVO {
 				+ middleName + ", LastName=" + LastName + ", dateOfBirth=" + dateOfBirth + ", gender=" + gender
 				+ ", email=" + email + ", phone=" + phone + ", addressVO=" + addressVO + ", incomeGroup=" + incomeGroup
 				+ ", profession=" + profession + ", adharNumber=" + adharNumber + ", pancardNumber=" + pancardNumber
-				+ ", citizenVO=" + citizenVO + "]";
+				+ ", loginVO=" + loginVO + "]";
 	}
 
 

@@ -17,7 +17,7 @@ import org.apache.derby.client.am.DateTime;
 
 import com.gsas.model.AddressVO;
 import com.gsas.model.CitizenDetailsVO;
-import com.gsas.model.CitizenVO;
+import com.gsas.model.LoginVO;
 import com.gsas.service.CitizenService;
 import com.gsas.utility.CitizenFactory;
 import com.gsas.utility.LayerType;
@@ -40,10 +40,10 @@ public class UpdateCitizenDetailsServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		RequestDispatcher requestDispatcher = null;
 
-		CitizenVO citizenVO = (CitizenVO) session.getAttribute("citizenVO");
-		if(citizenVO != null) {	
-			citizenVO.setUserName(request.getParameter("username"));
-			citizenVO.setPassword(request.getParameter("password"));
+		LoginVO loginVO = (LoginVO) session.getAttribute("citizenVO");
+		if(loginVO != null) {	
+			loginVO.setUserName(request.getParameter("username"));
+			loginVO.setPassword(request.getParameter("password"));
 			
 			AddressVO addressVO = new AddressVO();
 			addressVO.setAddressId(Long.parseLong(request.getParameter("addressId")));
@@ -72,12 +72,12 @@ public class UpdateCitizenDetailsServlet extends HttpServlet {
 			citizenDetailsVO.setProfession(request.getParameter("profession"));
 			citizenDetailsVO.setAdharNumber(Long.parseLong( request.getParameter("adharNumber") ));
 			citizenDetailsVO.setPancardNumber(request.getParameter("pancardNumber"));
-			citizenDetailsVO.setCitizenVO(citizenVO);
+			citizenDetailsVO.setCitizenVO(loginVO);
 			
 			citizenService.updateCitizenDetails(citizenDetailsVO);
 			
-			session.setAttribute("citizenVO", citizenVO);
-			session.setAttribute("message", "CitizenDetails Updated Successfully for Citizen Name: "+citizenVO.getUserName());
+			session.setAttribute("citizenVO", loginVO);
+			session.setAttribute("message", "CitizenDetails Updated Successfully for Citizen Name: "+loginVO.getUserName());
 			
 			
 			requestDispatcher = request.getRequestDispatcher("viewAllSchemes.jsp");

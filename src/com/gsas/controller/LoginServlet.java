@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.gsas.exception.AuthenticationException;
-import com.gsas.model.CitizenVO;
+import com.gsas.model.LoginVO;
 import com.gsas.service.CitizenService;
 import com.gsas.utility.CitizenFactory;
 import com.gsas.utility.LayerType;
@@ -31,9 +31,9 @@ public class LoginServlet extends HttpServlet {
 		CitizenService citizenService = (CitizenService) CitizenFactory.getInstance(LayerType.SERVICE);
 		RequestDispatcher rd = null;
 		try {
-			CitizenVO citizenVO = citizenService.Authenticate(request.getParameter("username"), request.getParameter("password"));
+			LoginVO loginVO = citizenService.Authenticate(request.getParameter("username"), request.getParameter("password"));
 			HttpSession session = request.getSession();
-			session.setAttribute("citizenVO", citizenVO);
+			session.setAttribute("citizenVO", loginVO);
 			
 			
 			rd = request.getRequestDispatcher("viewAllSchemes.jsp");

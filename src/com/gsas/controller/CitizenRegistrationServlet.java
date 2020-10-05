@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import com.gsas.model.AddressVO;
 import com.gsas.model.CitizenDetailsVO;
-import com.gsas.model.CitizenVO;
+import com.gsas.model.LoginVO;
 import com.gsas.service.CitizenService;
 import com.gsas.utility.CitizenFactory;
 import com.gsas.utility.LayerType;
@@ -35,9 +35,9 @@ public class CitizenRegistrationServlet extends HttpServlet {
 		CitizenService citizenService = (CitizenService) CitizenFactory.getInstance(LayerType.SERVICE);
 		RequestDispatcher requestDispatcher = null;
 
-		CitizenVO citizenVO = new CitizenVO();
-		citizenVO.setUserName(request.getParameter("username"));
-		citizenVO.setPassword(request.getParameter("password"));
+		LoginVO loginVO = new LoginVO();
+		loginVO.setUserName(request.getParameter("username"));
+		loginVO.setPassword(request.getParameter("password"));
 		
 		AddressVO addressVO = new AddressVO();
 		addressVO.setStreet(request.getParameter("street"));
@@ -64,11 +64,11 @@ public class CitizenRegistrationServlet extends HttpServlet {
 		citizenDetailsVO.setProfession(request.getParameter("profession"));
 		citizenDetailsVO.setAdharNumber(Long.parseLong( request.getParameter("adharNumber") ));
 		citizenDetailsVO.setPancardNumber(request.getParameter("pancardNumber"));
-		citizenDetailsVO.setCitizenVO(citizenVO);
+		citizenDetailsVO.setCitizenVO(loginVO);
 		
 		citizenService.registerCitizen(citizenDetailsVO);
 		
-		request.setAttribute("message", "Citizen Registered Successfully with User Name: "+citizenVO.getUserName());
+		request.setAttribute("message", "Citizen Registered Successfully with User Name: "+loginVO.getUserName());
 		
 		
 		requestDispatcher = request.getRequestDispatcher("citizenLogin.jsp");

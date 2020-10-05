@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import com.gsas.exception.CitizenNotFoundException;
 import com.gsas.model.CitizenDetailsVO;
-import com.gsas.model.CitizenVO;
+import com.gsas.model.LoginVO;
 import com.gsas.service.CitizenService;
 import com.gsas.utility.CitizenFactory;
 import com.gsas.utility.LayerType;
@@ -34,11 +34,11 @@ public class EditCitizenDetailsServlet extends HttpServlet {
 		CitizenService citizenService = (CitizenService) CitizenFactory.getInstance(LayerType.SERVICE);
 		RequestDispatcher requestDispatcher = null;
 		HttpSession session = request.getSession();
-		CitizenVO citizenVO = (CitizenVO) session.getAttribute("citizenVO");
+		LoginVO loginVO = (LoginVO) session.getAttribute("citizenVO");
 
 			try {
-				if(citizenVO != null) {		//Citizen must be Logged In in order to perform Edit Operation
-					CitizenDetailsVO citizenDetailsVO = citizenService.getCitizenDetails(citizenVO.getCitizenId());
+				if(loginVO != null) {		//Citizen must be Logged In in order to perform Edit Operation
+					CitizenDetailsVO citizenDetailsVO = citizenService.getCitizenDetails(loginVO.getCitizenId());
 					request.setAttribute("citizenDetailsVO", citizenDetailsVO);
 					
 					requestDispatcher = request.getRequestDispatcher("editCitizenDetails.jsp");

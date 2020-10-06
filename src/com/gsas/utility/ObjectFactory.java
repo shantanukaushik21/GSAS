@@ -1,0 +1,24 @@
+package com.gsas.utility;
+
+import com.gsas.dao.CitizenDaoImpl;
+import com.gsas.dao.SchemeDaoImpl;
+import com.gsas.service.CitizenServiceImpl;
+import com.gsas.service.SchemeServiceImpl;
+
+public class ObjectFactory {
+	
+public static Object getInstance(LayerType type) {
+		
+		switch(type) {
+		//Factory for Citizen
+		case CITIZEN_DAO : return new CitizenDaoImpl();
+		case CITIZEN_SERVICE : return new CitizenServiceImpl();
+		
+		//Factory for Scheme
+		case SCHEME_DAO : return new SchemeDaoImpl();
+		case SCHEME_SERVICE : return new SchemeServiceImpl();
+		}
+		return null;
+	}
+
+}

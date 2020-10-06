@@ -5,15 +5,15 @@ import com.gsas.exception.AuthenticationException;
 import com.gsas.exception.CitizenNotFoundException;
 import com.gsas.model.CitizenDetailsVO;
 import com.gsas.model.LoginVO;
-import com.gsas.utility.CitizenFactory;
 import com.gsas.utility.LayerType;
+import com.gsas.utility.ObjectFactory;
 
 public class CitizenServiceImpl implements CitizenService {
 	private CitizenDao citizenDao = null;
 	
 	
 	public CitizenServiceImpl() {
-		citizenDao = (CitizenDao) CitizenFactory.getInstance(LayerType.DAO);
+		citizenDao = (CitizenDao) ObjectFactory.getInstance(LayerType.CITIZEN_DAO);
 	}
 
 	@Override

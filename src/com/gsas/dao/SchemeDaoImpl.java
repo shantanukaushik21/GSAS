@@ -4,11 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.gsas.exception.SchemeNotFoundException;
 import com.gsas.model.BankVO;
 import com.gsas.model.DocumentVO;
+import com.gsas.model.IncomeGroupVO;
+import com.gsas.model.MinistryVO;
+import com.gsas.model.ProfessionVO;
+import com.gsas.model.SchemeEligibilityVO;
 import com.gsas.model.SchemeVO;
+import com.gsas.model.SectorVO;
 import com.gsas.utility.DBUtility;
 
 public class SchemeDaoImpl implements SchemeDao{
@@ -178,15 +185,134 @@ public class SchemeDaoImpl implements SchemeDao{
 	}
 
 	@Override
-	public SchemeVO getSchemeDetails(Long schemeId) {
+	public SchemeVO getSchemeDetails(Long schemeId) throws SchemeNotFoundException {
 		// TODO Auto-generated method stub
-		return null;
+		SchemeVO scheme = null;
+		
+		try {
+			Connection connection = DBUtility.getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement("select * from scheme s inner join ministry m on s.ministry_ref = m.ministry_id inner join sector sec on s.sector_ref = sec.sector_id  where scheme_id = ?");
+			preparedStatement.setLong(1, schemeId);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()){
+				scheme.setSchemeId(resultSet.getLong("scheme_id"));
+				scheme.setSchemeName(resultSet.getString("name"));
+				scheme.setSummary(resultSet.getString("password"));
+				scheme.setDescription(resultSet.getString("description"));
+				scheme.setImagePath(resultSet.getString("image_path"));
+				
+				//Fetching ministry
+				MinistryVO minstry = new MinistryVO(resultSet.getLong("ministry_id"),resultSet.getString("ministry_name") );
+				
+				//Fetching sector
+				SectorVO sector = new SectorVO(resultSet.getLong("sector_id"),resultSet.getString("sector_name"));
+				
+				scheme.setStartDate(resultSet.getDate("start_date").toLocalDate());
+				
+				//Fetching Scheme Eligibility
+				long schemeEligibilityId = resultSet.getLong("scheme_eligibility_ref");
+				PreparedStatement schemeEligibilityStatement = connection.prepareStatement("select * from scheme_elegibility s inner join income_group i on s.income_group_ref = i.income_group_id inner join profession p on s.profession_ref = p.profession_id  where scheme_elegibility_id = ?");
+				schemeEligibilityStatement.setLong(1, schemeEligibilityId);
+				ResultSet schemeEligibilityResultSet = schemeEligibilityStatement.executeQuery();
+				
+				int minAge = schemeEligibilityResultSet.getInt("min_age");
+				int maxAge = schemeEligibilityResultSet.getInt("max_age");
+				//Fetch data from Income Group
+				IncomeGroupVO incomeGroupVO = new IncomeGroupVO(schemeEligibilityResultSet.getLong("income_group_id"), schemeEligibilityResultSet.getString("income_group_name"));
+				//Fetch data from Profession
+				ProfessionVO professionVO = new ProfessionVO(schemeEligibilityResultSet.getLong("profession_id"), schemeEligibilityResultSet.getString("profession_name"));
+				String gender = schemeEligibilityResultSet.getString("gender");
+				SchemeEligibilityVO schemeEligibilityVO = new SchemeEligibilityVO(schemeEligibilityId, minAge, maxAge, incomeGroupVO, gender, professionVO);
+				scheme.setSchemeEligibilityVO(schemeEligibilityVO);
+				
+				scheme.setStatus(resultSet.getBoolean("status"));
+				
+				
+			}
+			
+			resultSet.close();
+			preparedStatement.close();
+			connection.close();
+			if(scheme == null) {
+				throw new SchemeNotFoundException("Sorry Scheme doesn't exist");
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		
+	return scheme;
 	}
 
 	@Override
-	public SchemeVO[] getAllScheme() {
+	public List<SchemeVO> getAllScheme() {
 		// TODO Auto-generated method stub
-		return null;
+		List<SchemeVO> list = new ArrayList<SchemeVO>();
+		
+		try {
+			Connection connection = DBUtility.getConnection();
+			//PreparedStatement preparedStatement = connection.prepareStatement("select * from scheme");
+			
+			PreparedStatement preparedStatement = connection.prepareStatement("select * from scheme");
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				SchemeVO scheme = new SchemeVO();
+				scheme.setSchemeId(resultSet.getLong("scheme_id"));
+				scheme.setSchemeName(resultSet.getString("name"));
+				scheme.setSummary(resultSet.getString("password"));
+				scheme.setDescription(resultSet.getString("description"));
+				scheme.setImagePath(resultSet.getString("image_path"));
+				
+				//Fetching data from Ministry
+				long ministryId = resultSet.getLong("ministry_ref");
+				PreparedStatement ministryStatement = connection.prepareStatement("select * from ministry where ministry_id = ?");
+				ministryStatement.setLong(1, ministryId);
+				ResultSet ministryResultSet = ministryStatement.executeQuery();
+				String ministryName = ministryResultSet.getString("ministry_name");
+				MinistryVO ministryVO = new MinistryVO(ministryId, ministryName);
+				scheme.setMinistryVO(ministryVO);
+				
+				//Fetching data from Sector
+				long sectorId = resultSet.getLong("sector_ref");
+				PreparedStatement sectorStatement = connection.prepareStatement("select * from sector where sector_id = ?");
+				sectorStatement.setLong(1, sectorId);
+				ResultSet sectorResultSet = sectorStatement.executeQuery();
+				String sectorName = sectorResultSet.getString("sector_name");
+				SectorVO sectorVO = new SectorVO(sectorId, sectorName);
+				scheme.setSectorVO(sectorVO);
+				
+				scheme.setStartDate(resultSet.getDate("start_date").toLocalDate());
+				
+				//Fetch data from Scheme Eligibility
+				long schemeEligibilityId = resultSet.getLong("scheme_eligibility_ref");
+				PreparedStatement schemeEligibilityStatement = connection.prepareStatement("select * from scheme_elegibility s inner join income_group i on s.income_group_ref = i.income_group_id inner join profession p on s.profession_ref = p.profession_id  where scheme_elegibility_id = ?");
+				schemeEligibilityStatement.setLong(1, schemeEligibilityId);
+				ResultSet schemeEligibilityResultSet = schemeEligibilityStatement.executeQuery();
+				int minAge = schemeEligibilityResultSet.getInt("min_age");
+				int maxAge = schemeEligibilityResultSet.getInt("max_age");
+				//Fetch data from Income Group
+				IncomeGroupVO incomeGroupVO = new IncomeGroupVO(schemeEligibilityResultSet.getLong("income_group_id"), schemeEligibilityResultSet.getString("income_group_name"));
+				//Fetch data from Profession
+				ProfessionVO professionVO = new ProfessionVO(schemeEligibilityResultSet.getLong("profession_id"), schemeEligibilityResultSet.getString("profession_name"));
+				String gender = schemeEligibilityResultSet.getString("gender");
+				SchemeEligibilityVO schemeEligibilityVO = new SchemeEligibilityVO(schemeEligibilityId, minAge, maxAge, incomeGroupVO, gender, professionVO);
+				scheme.setSchemeEligibilityVO(schemeEligibilityVO);
+				
+				scheme.setStatus(resultSet.getBoolean("status"));
+				
+				list.add(scheme);
+			}
+			resultSet.close();
+			preparedStatement.close();
+			connection.close();
+		} catch(SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return list;
+
 	}
 	
 	

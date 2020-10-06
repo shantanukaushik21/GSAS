@@ -25,4 +25,5 @@ local.properties
 .sts4-cache
 *.class
 .recommenders
+*.DS_Store 
 /bin/

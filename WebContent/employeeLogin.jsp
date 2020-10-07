@@ -10,10 +10,8 @@
         <link href="css\form.css" rel="stylesheet">
     </head>
     <body>
-        <script>
-            function switchPage() {
-                location.replace("displaySchemes.jsp")
-                }
+        <script src="JS\navigation.js">
+           
         </script>
         <div class="header">
             <h1>Employee Login</h1>

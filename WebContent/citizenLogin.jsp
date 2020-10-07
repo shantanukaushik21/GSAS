@@ -10,6 +10,7 @@
         <link href="css\form.css" rel="stylesheet">
     </head>
     <body>
+    <script src="JS\navigation.js"></script>
         <div class="header">
             <h1>Citizen Login</h1>
         </div>
@@ -38,16 +39,16 @@
      
         <div class="main">
             <div class="main1">
-                <form method="POST" action="">
+                <form method="POST" action="./LoginServlet">
                     <div class="col1">
-                        <input type="number" name="eid" id="eid" placeholder="Enter your employee ID" required><br>
+                        <input type="number" name="username" id="username" placeholder="Enter your employee ID" required><br>
                     </div>
                     <div class="col2">
-                        <input type="password" name="epwd" id="epwd" placeholder="Enter your password." required><br>
+                        <input type="password" name="password" id="password" placeholder="Enter your password." required><br>
 
                     </div>
                     <div class="col3">
-                        <button type="submit" id="submit" class="submit"> Submit </button>
+                        <button type="submit" id="submit" onclick="displayScheme()"> Submit </button>
                     </div>
                     
                 </form>
@@ -60,6 +61,7 @@
         <div class="footer">
             <h2>Footer</h2>
         </div>
+         
     
     </body>
 </html>

@@ -23,7 +23,6 @@
         </style>
             </head>
     <body>
-    <script src="JS\navigation.js"></script>
         <div class="header">
             <h1>Add Scheme</h1>
             
@@ -40,7 +39,7 @@
                 <a href="index.jsp">Logout</a>
             </div>
             <div class="content">
-             <a href="schemeManagement.jsp">Add more Schemes</a>
+             <a href="schemeManagementPage.jsp">Add more Schemes</a>
             </div>
             
      </div>
@@ -76,10 +75,10 @@
                         <label for="sector">Choose a sector:</label>
 
                         <select name="sector" id="sector">
-                            <option value="pension">Pension</option>
-                            <option value="childCare">Child Care</option>
-                            <option value="agriculture">Agriculture</option>
-                            <option value="education">Education</option>
+                            <option value="finance">Pension</option>
+                            <option value="saab">Child Care</option>
+                            <option value="mercedes">Agriculture</option>
+                            <option value="audi">Education</option>
                         </select>
                     </div>
                     <div class="col1">
@@ -104,27 +103,14 @@
                         
                     </div>
                     <div class="col1">
-                       <label>Choose Documents</label>
-
-                    </div>
-                    <div class="col1" id="col2">
-                       
-                        
-                        <input type="checkbox" id="panCard" name="panCard" value="panCard">
-                        <label for="panCard"> Pan Card</label><br>
-                        <input type="checkbox" id="passport" name="passport" value="passport">
-                        <label for="passport"> Passport</label><br>
-                        <input type="checkbox" id="aadharCard" name="aadharCard" value="aadharCard">
-                        <label for="aadharCard"> HDFC</label><br>
-
-                        
+                        Upload supporting documents <input type="file" id="files" name="files" multiple >
                     </div>
                     <div class="col1">
                         <label>Choose Bank</label>
 
                     </div>
                     <div class="col1" id="col2">
-                       
+                        <!--<button type="submit" id="submit" value="submit" onclick="add(col2)">Add eligibility criteria.</button>-->
                         
                         <input type="checkbox" id="HSBC" name="HSBC" value="HSBC">
                         <label for="HSBC"> HSBC</label><br>
@@ -136,8 +122,7 @@
                         
                     </div>
                     <div class="col1">
-                        <button type="submit" id="submit" > Submit </button>
-                        <button type="button" id="button" onclick="navigateBack()"> Back </button>
+                        <button type="submit" id="submit" class="submit"> Submit </button>
                     </div>
                     
                 </form>
@@ -150,7 +135,6 @@
         <div class="footer">
             <h2>Footer</h2>
         </div>
-
     
     </body>
 </html>

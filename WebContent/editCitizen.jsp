@@ -21,6 +21,7 @@
         
     </head>
     <body>
+    <script src="JS\navigation.js"></script>
         <div class="header">
            <h1>Citizen Registration</h1>
         </div>
@@ -115,7 +116,7 @@
                     
                     <div class="col1">
                         <label>
-                            <button type="submit" class="submit"> Submit </button>
+                            <button type="submit" class="submit" onclick="navigateLogin()"> Submit </button>
                         </label>
                     </div>
                     

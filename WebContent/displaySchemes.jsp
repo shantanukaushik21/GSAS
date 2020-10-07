@@ -27,6 +27,7 @@
         
     </head>
     <body>
+    <script src="JS\navigation.js"></script>
         <div class="header">
             <h1>Schemes</h1>
         </div>
@@ -51,6 +52,8 @@
         <div class="main">
             <div class="main1">
                     <h1> Schemes </h1>
+                    <button type="submit" name="add" id="add" onclick="applyScheme()">Apply for Scheme</button>
+                    
                 </div>
                 <div class="main1">
                     <h1> Applied Schemes</h1>
@@ -67,6 +70,7 @@
         <div class="footer">
             <h2>Footer</h2>
         </div>
+        
     
     </body>
 </html>

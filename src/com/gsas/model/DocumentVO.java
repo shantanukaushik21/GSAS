@@ -7,6 +7,10 @@ public class DocumentVO {
 	public DocumentVO() {
 		super();
 	}
+	public DocumentVO(long documentId) {
+		super();
+		this.documentId = documentId;
+	}
 	public DocumentVO(long documentId, String documentName) {
 		super();
 		this.documentId = documentId;

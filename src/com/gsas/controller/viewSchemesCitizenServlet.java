@@ -15,7 +15,7 @@ import com.gsas.exception.DatabaseException;
 import com.gsas.exception.SchemeNotFoundException;
 import com.gsas.model.LoginVO;
 import com.gsas.model.SchemeVO;
-import com.gsas.service.SchemeService;
+import com.gsas.service.CitizenService;
 import com.gsas.utility.LayerType;
 import com.gsas.utility.ObjectFactory;
 
@@ -33,9 +33,11 @@ public class viewSchemesCitizenServlet extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		SchemeService schemeService = (SchemeService) ObjectFactory.getInstance(LayerType.SCHEME_SERVICE);
+		CitizenService citizenService = (CitizenService) ObjectFactory.getInstance(LayerType.CITIZEN_SERVICE);
 		RequestDispatcher rd = null;
-		List<SchemeVO> schemeList = null;
+		List<SchemeVO> notAppliedSchemeList = null;
+		List<SchemeVO> acceptedSchemeList = null;
+		List<SchemeVO> rejectedSchemeList = null;
 
 		HttpSession session = request.getSession();
 		LoginVO loginVO = (LoginVO) session.getAttribute("loginVO");
@@ -44,7 +46,15 @@ public class viewSchemesCitizenServlet extends HttpServlet {
 			if(loginVO != null) {
 				if(loginVO.isEmployee() == false) {						//If user is already logged in
 					
-					schemeList = schemeService.getAllScheme();			//return list of all schemes
+					notAppliedSchemeList = citizenService.getNotAppliedSchemeList(loginVO.getLoginId());			//return list of all schemes
+					request.setAttribute("notAppliedSchemeList", notAppliedSchemeList);
+					
+					acceptedSchemeList = citizenService.getAppliedSchemeList(loginVO.getLoginId(), true);
+					request.setAttribute("acceptedSchemeList", acceptedSchemeList);
+					
+					rejectedSchemeList = citizenService.getAppliedSchemeList(loginVO.getLoginId(), false);
+					request.setAttribute("rejectedSchemeList", rejectedSchemeList);
+					
 					rd = request.getRequestDispatcher("viewAllSchemes.jsp");
 					rd.forward(request, response);
 				}

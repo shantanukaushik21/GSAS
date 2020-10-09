@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gsas.exception.DatabaseException;
 import com.gsas.model.BankVO;
 import com.gsas.model.CitizenDetailsVO;
 import com.gsas.model.DocumentVO;
@@ -47,75 +48,61 @@ public class ApplySchemeServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 				
-				SchemeService schemeService = (SchemeService) ObjectFactory.getInstance(LayerType.SCHEME_SERVICE);
-				CitizenService citizenService = (CitizenService) ObjectFactory.getInstance(LayerType.CITIZEN_SERVICE);
-				HttpSession session = request.getSession();
 				RequestDispatcher requestDispatcher = null;
-				
-				LoginVO loginVO = (LoginVO) session.getAttribute("citizenVO");
-				if(loginVO != null) {
+				try {
+					SchemeService schemeService = (SchemeService) ObjectFactory.getInstance(LayerType.SCHEME_SERVICE);
+					CitizenService citizenService = (CitizenService) ObjectFactory.getInstance(LayerType.CITIZEN_SERVICE);
+					HttpSession session = request.getSession();
 					
-					SchemeApplicantDocumentsVO schemeApplicantDocuments = null;
-					SchemeApplicantVO schemeApplicant = new SchemeApplicantVO();
-					SchemeEligibilityVO citizenEligibilityDetails = new SchemeEligibilityVO();
-					SchemeVO schemeVO = schemeService.getSchemeDetails(Long.parseLong(request.getParameter("schemeId"))); // get scheme from schemeID
-					SchemeEligibilityVO schemeEligibilityVO = schemeVO.getSchemeEligibilityVO(); //get Eligibility of that scheme
-					CitizenDetailsVO citizenDetails = citizenService.getCitizenDetails(loginVO.getLoginId()); //get citizenDetails from citizenId
+					LoginVO loginVO = (LoginVO) session.getAttribute("citizenVO");
+					if(loginVO != null) {
 					
-				
-							
-					//creating object for eligibility details of citizen
-					String gender = request.getParameter("gender").trim(); // set gender from the form 
-					int age = request.getParameter("age");// get age from form
-					List<SchemeApplicantDocumentsVO> documents = (List<SchemeApplicantDocumentsVO>)request.getParameter("List");
-					BankVO bank = new BankVO(request.getParameter("bank").trim());// get the bank the citizen uses 
-					Boolean status = schemeService.validate(schemeEligibilityVO, citizenDetails, gender, age);
-					
-					//schemeApplicant Object
-					schemeApplicant.setSchemeVO(schemeVO);
-					schemeApplicant.setLoginVO(loginVO);
-					schemeApplicant.setBankVO(bank);
-					schemeApplicant.setAccountNumber(request.getParameter("account_number"));
-					schemeApplicant.setTypeOfAccount(request.getParameter("type_of_account"));
-					schemeApplicant.setIfsc(request.getParameter("ifsc"));
-					schemeApplicant.setBranch(request.getParameter("branch"));
-					schemeApplicant.setApplicantDocumentsList(documents);
-					schemeApplicant.setApprovedStatus(status);
-					schemeApplicant.setReason("Your request is processing.");
-					
-					if(status == true) {
-						schemeApplicantDocuments = new SchemeApplicantDocumentsVO();
-						List<SchemeApplicantDocumentsVO> docList = new ArrayList<>();
-						for(SchemeApplicantDocumentsVO items : documents) {			// traverse document list
-						schemeApplicantDocuments.setDocumentVO(new DocumentVO(Long.parseLong(request.getParameter("docId"))));
-						schemeApplicantDocuments.setDocumentPath(request.getParameter("docPath"));
-						docList.add(schemeApplicantDocuments);
+
+						SchemeApplicantVO schemeApplicant = new SchemeApplicantVO();
+						SchemeEligibilityVO citizenEligibilityDetails = new SchemeEligibilityVO();
+						SchemeVO schemeVO = schemeService.getSchemeDetails(Long.parseLong(request.getParameter("schemeId"))); // get scheme from schemeID
+						SchemeEligibilityVO schemeEligibilityVO = schemeVO.getSchemeEligibilityVO(); //get Eligibility of that scheme
+						CitizenDetailsVO citizenDetails = citizenService.getCitizenDetails(loginVO.getLoginId()); //get citizenDetails from citizenId						
+	
+						//schemeApplicant Object
+						schemeApplicant.setSchemeVO(schemeVO);
+						schemeApplicant.setLoginVO(loginVO);
+						schemeApplicant.setBankVO(null);
+						schemeApplicant.setAccountNumber(0);
+						schemeApplicant.setTypeOfAccount(null);
+						schemeApplicant.setIfsc(null);
+						schemeApplicant.setBranch(null);
+						schemeApplicant.setApplicantDocumentsList(null);
+						
+						//checking if the citizen satisfies basic eligiblity criteria of the scheme
+					    schemeApplicant.setReason(schemeService.validate(schemeEligibilityVO, citizenDetails));					
+						//on successful validation
+						if(schemeApplicant.getReason().equals("All criteria validated successfuly")) {
+							schemeApplicant.setApprovedStatus(true);							
+							requestDispatcher = request.getRequestDispatcher("applySchemes.jsp");
 						}
-						schemeApplicant = schemeService.validate(schemeVO, bank, docList, schemeApplicant);
-						if(schemeApplicant.isApprovedStatus()){   //check if status = true after doc and bank validation.
-							schemeService.addSchemeApplication(schemeApplicant, docList); // fill scheme_applicant table with status=true
-						} //and add document path in scheme_applicant_document table
+						//on failed validation
 						else {
-							schemeService.addSchemeApplication(schemeApplicant);
-
+							schemeApplicant.setApprovedStatus(false);
+							schemeService.addSchemeApplicant(schemeApplicant);
+							requestDispatcher = request.getRequestDispatcher("displaySchemes.jsp");
 						}
+						request.setAttribute("err",schemeApplicant.getReason());
+						requestDispatcher.forward(request, response);			
 					}
+					
 					else {
-						schemeApplicant.setReason("Sorry! You are not eligible for this scheme.");
-						schemeService.addSchemeApplication(schemeApplicant);
-
+						requestDispatcher = request.getRequestDispatcher("citizenLogin.jsp");
+						request.setAttribute("err","Sorry, You are not Authorized to view this Page");
+						requestDispatcher.forward(request, response);
+					
 					}
-					requestDispatcher = request.getRequestDispatcher("ApplySchemes.jsp");
-					request.setAttribute("err",schemeApplicant.getReason());
-					requestDispatcher.forward(request, response);		
-				}
-				
-				else {
-					requestDispatcher = request.getRequestDispatcher("citizenLogin.jsp");
-					request.setAttribute("err","Sorry, You are not Authorized to view this Page");
+				} catch (DatabaseException e) {
+					requestDispatcher = request.getRequestDispatcher("ApplyScheme.jsp");
+					request.setAttribute("err", e.getMessage());
 					requestDispatcher.forward(request, response);
-				
 				}
+				
 
 	}
 

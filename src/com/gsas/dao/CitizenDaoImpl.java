@@ -19,7 +19,7 @@ public class CitizenDaoImpl implements CitizenDao {
 @Override
 	public void registerCitizen(CitizenDetailsVO citizenDetailsVO) {
 		try {
-			Connection connection = DBUtility.getConnection();
+			connection = DBUtility.getConnection();
 			PreparedStatement sequenceStatement = connection.prepareStatement("values(next value for citizen_seq)");
 			ResultSet rs = sequenceStatement.executeQuery();
 			long seq = 0;

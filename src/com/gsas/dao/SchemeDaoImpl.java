@@ -20,11 +20,12 @@ import com.gsas.model.SectorVO;
 import com.gsas.utility.DBUtility;
 
 public class SchemeDaoImpl implements SchemeDao{
+	private Connection connection;
 
 	@Override
 	public void addScheme(SchemeVO scheme) throws DatabaseException {
 		try {
-			Connection connection = DBUtility.getConnection();
+			connection = DBUtility.getConnection();
 			PreparedStatement sequenceStatement = connection.prepareStatement("values(next value for scheme_seq)");
 			ResultSet rs = sequenceStatement.executeQuery();
 			long seq = 0;

@@ -19,7 +19,7 @@ public class CitizenDaoImpl implements CitizenDao {
 @Override
 	public void registerCitizen(CitizenDetailsVO citizenDetailsVO) {
 		try {
-			Connection connection = DBUtility.getConnection();
+			connection = DBUtility.getConnection();
 			PreparedStatement sequenceStatement = connection.prepareStatement("values(next value for citizen_seq)");
 			ResultSet rs = sequenceStatement.executeQuery();
 			long seq = 0;
@@ -85,7 +85,7 @@ public class CitizenDaoImpl implements CitizenDao {
 			ResultSet resultSet = fetchStatement.executeQuery();
 			if(resultSet.next()) {
 				loginVO = new LoginVO();
-				loginVO.setCitizenId(resultSet.getLong("citizen_id"));
+				loginVO.setLoginId(resultSet.getLong("login_id"));
 				loginVO.setUserName(resultSet.getString("username"));
 				loginVO.setPassword(resultSet.getString("password"));
 				return loginVO;
@@ -115,7 +115,7 @@ public class CitizenDaoImpl implements CitizenDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()){
 				LoginVO loginVO = new LoginVO();
-				loginVO.setCitizenId(resultSet.getLong("citizen_id"));
+				loginVO.setLoginId(resultSet.getLong("login_id"));
 				loginVO.setUserName(resultSet.getString("username"));
 				loginVO.setPassword(resultSet.getString("password"));
 				loginVO.setEmployee(resultSet.getBoolean("is_employee"));
@@ -167,7 +167,7 @@ public class CitizenDaoImpl implements CitizenDao {
 			PreparedStatement updateStatement = connection.prepareStatement("update login_credential set username=?,password=? where citizen_id=?");
 			updateStatement.setString(1, citizenDetailsVO.getCitizenVO().getUserName());
 			updateStatement.setString(2, citizenDetailsVO.getCitizenVO().getPassword());
-			updateStatement.setLong(3, citizenDetailsVO.getCitizenVO().getCitizenId());
+			updateStatement.setLong(3, citizenDetailsVO.getCitizenVO().getLoginId());
 			updateStatement.executeUpdate();
 			
 			//Update citizen_address
@@ -193,7 +193,7 @@ public class CitizenDaoImpl implements CitizenDao {
 			updateStatement.setString(10, citizenDetailsVO.getProfession());
 			updateStatement.setLong(11, citizenDetailsVO.getAdharNumber());
 			updateStatement.setString(12, citizenDetailsVO.getPancardNumber());
-			updateStatement.setLong(13, citizenDetailsVO.getCitizenVO().getCitizenId()); //citizen_ref FK (citizen_credential)
+			updateStatement.setLong(13, citizenDetailsVO.getCitizenVO().getLoginId()); //citizen_ref FK (citizen_credential)
 			updateStatement.setLong(14, citizenDetailsVO.getCitizenDetailsId());
 			updateStatement.executeUpdate();
 

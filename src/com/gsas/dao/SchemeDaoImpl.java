@@ -373,7 +373,7 @@ public class SchemeDaoImpl implements SchemeDao{
 			ps.setLong(3, schemeApplicant.getLoginVO().getLoginId());
 			ps.setLong(4, schemeApplicant.getBankVO().getBankId());
 			ps.setLong(5, schemeApplicant.getAccountNumber());
-			ps.setString(6, schemeApplicant.getYpeOfAccount());
+			ps.setString(6, schemeApplicant.getTypeOfAccount());
 			ps.setString(7, schemeApplicant.getIfsc());
 			ps.setString(8, schemeApplicant.getBranch());
 			ps.setBoolean(9, schemeApplicant.isApprovedStatus());
@@ -414,7 +414,7 @@ public class SchemeDaoImpl implements SchemeDao{
 			ps.setLong(3, schemeApplicant.getLoginVO().getLoginId());
 			ps.setLong(4, schemeApplicant.getBankVO().getBankId());
 			ps.setLong(5, schemeApplicant.getAccountNumber());
-			ps.setString(6, schemeApplicant.getYpeOfAccount());
+			ps.setString(6, schemeApplicant.getTypeOfAccount());
 			ps.setString(7, schemeApplicant.getIfsc());
 			ps.setString(8, schemeApplicant.getBranch());
 			ps.setBoolean(9, schemeApplicant.isApprovedStatus());

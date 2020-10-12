@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -35,7 +36,25 @@
                 
             </div>
             <div class="add">
-                <button type="submit" name="add" id="add" onclick="addScheme()">Add Scheme</button>
+            <form method="post" action="EditSchemeServlet">
+            	<c:forEach items="${schemeList}" var="scheme">
+					<div class="column">
+						<div class="card">
+							
+							<h2>${scheme.schemeName } </h2>
+							<img src="${scheme.imagePath }" class=".cardImage">
+							<p>${scheme.summary }</p>
+							<p>
+								<button type="submit" name="${scheme.schemeId }" id="${scheme.schemeId }">Edit Scheme</button>
+							</p>
+
+						</div>
+						</div>
+							</c:forEach>
+                </form>
+            	<form method="post" action="AddSchemeServlet">
+                <button type="submit" name="add" id="add" >Add Scheme</button>
+                </form>
 
             </div>
             <div class="add">

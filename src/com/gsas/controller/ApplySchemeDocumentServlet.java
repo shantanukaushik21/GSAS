@@ -4,14 +4,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.gsas.exception.AuthenticationException;
 import com.gsas.exception.DatabaseException;
+import com.gsas.exception.SchemeNotFoundException;
 import com.gsas.model.BankVO;
 import com.gsas.model.DocumentVO;
 import com.gsas.model.LoginVO;
@@ -51,23 +54,23 @@ public class ApplySchemeDocumentServlet extends HttpServlet {
 			LoginVO loginVO = (LoginVO) session.getAttribute("loginVO");
 			if(loginVO != null) {
 				SchemeApplicantDocumentsVO schemeApplicantDocuments =  new SchemeApplicantDocumentsVO();
-				SchemeApplicantVO schemeApplicant = (SchemeApplicantVO)request.getParameter("schemeApplicant");
+				SchemeApplicantVO schemeApplicant =null; //(SchemeApplicantVO)request.getParameter("schemeApplicant");
 				List<SchemeApplicantDocumentsVO> docList = new ArrayList<>();
 				SchemeVO schemeVO = schemeService.getSchemeDetails(Long.parseLong(request.getParameter("schemeId"))); // get scheme from schemeID
 				
-				request.setParameter("schemeVO",schemeVO);
-				request.setParameter("scheme_banks",schemeVO.getBankList());
-				request.getParameter("scheme_documents",schemeVO.getDocumentList());
+				request.setAttribute("schemeVO",schemeVO);
+				request.setAttribute("scheme_banks",schemeVO.getBankList());
+				request.setAttribute("scheme_documents",schemeVO.getDocumentList());
 				
 				//schemeApplicant Object
 				schemeApplicant.setSchemeVO(schemeVO);
 				schemeApplicant.setLoginVO(loginVO);
-				schemeApplicant.setBankVO(new BankVO(request.getParameter("bank").trim()));
-				schemeApplicant.setAccountNumber(request.getParameter("account_number"));
+				schemeApplicant.setBankVO(new BankVO(Long.parseLong(request.getParameter("bank").trim())));
+				schemeApplicant.setAccountNumber(Long.parseLong(request.getParameter("account_number")));
 				schemeApplicant.setTypeOfAccount(request.getParameter("type_of_account"));
 				schemeApplicant.setIfsc(request.getParameter("ifsc"));
 				schemeApplicant.setBranch(request.getParameter("branch"));
-				schemeApplicant.setApplicantDocumentsList((List<SchemeApplicantDocumentsVO>)request.getParameter("List"));
+				//schemeApplicant.setApplicantDocumentsList((List<SchemeApplicantDocumentsVO>)request.getParameter("List"));
 				
 				//validating documents and bank
 				for(SchemeApplicantDocumentsVO items : schemeApplicant.getApplicantDocumentsList()) {
@@ -95,7 +98,7 @@ public class ApplySchemeDocumentServlet extends HttpServlet {
 				requestDispatcher.forward(request, response);
 			}
 			
-		} catch (DatabaseException e) {
+		} catch (DatabaseException | NumberFormatException | SchemeNotFoundException e) {
 			requestDispatcher = request.getRequestDispatcher("ApplyScheme.jsp");
 			request.setAttribute("err", e.getMessage());
 			requestDispatcher.forward(request, response);

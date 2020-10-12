@@ -1,17 +1,22 @@
 package com.gsas.controller;
 
 import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gsas.exception.CitizenNotFoundException;
 import com.gsas.exception.DatabaseException;
+import com.gsas.exception.SchemeNotFoundException;
 import com.gsas.model.BankVO;
 import com.gsas.model.CitizenDetailsVO;
 import com.gsas.model.DocumentVO;
@@ -97,7 +102,7 @@ public class ApplySchemeServlet extends HttpServlet {
 						requestDispatcher.forward(request, response);
 					
 					}
-				} catch (DatabaseException e) {
+				} catch (DatabaseException | NumberFormatException | SchemeNotFoundException | CitizenNotFoundException e) {
 					requestDispatcher = request.getRequestDispatcher("ApplyScheme.jsp");
 					request.setAttribute("err", e.getMessage());
 					requestDispatcher.forward(request, response);

@@ -21,5 +21,5 @@ public interface SchemeService {
 	public SchemeApplicantVO validate(SchemeVO scheme, BankVO bank, List<SchemeApplicantDocumentsVO> docList, SchemeApplicantVO schemeApplicant);
 	public String validate(SchemeEligibilityVO schemeEligibility, CitizenDetailsVO citizenDetails);
 	public SchemeApplicantVO addSchemeApplicant(SchemeApplicantVO schemeApplicant, List<SchemeApplicantDocumentsVO> document) throws DatabaseException;
-	public  SchemeApplicantVO addSchemeApplicant(SchemeApplicantVO schemeApplicant);
+	public  SchemeApplicantVO addSchemeApplicant(SchemeApplicantVO schemeApplicant) throws DatabaseException;
 }

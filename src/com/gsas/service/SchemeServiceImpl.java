@@ -154,7 +154,7 @@ public class SchemeServiceImpl implements SchemeService {
 	}
 
 	@Override
-	public SchemeApplicantVO addSchemeApplicant(SchemeApplicantVO schemeApplicant) {
+	public SchemeApplicantVO addSchemeApplicant(SchemeApplicantVO schemeApplicant) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return schemeDao.addSchemeApplicant(schemeApplicant);
 	}}
